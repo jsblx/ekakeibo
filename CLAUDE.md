@@ -5,10 +5,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm run dev        # Start dev server at http://localhost:5173
-npm run build      # Production build (outputs to /dist)
-npm run lint       # ESLint checks
-npm run preview    # Preview production build locally
+yarn dev           # Start dev server at http://localhost:5173
+yarn build         # Production build (outputs to /dist)
+yarn lint          # ESLint checks
+yarn preview       # Preview production build locally
 ```
 
 No test framework is currently configured.

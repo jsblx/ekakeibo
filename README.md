@@ -1,16 +1,90 @@
-# React + Vite
+# ekakeibo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal finance PWA built with React 19 + TypeScript + Vite, using **Google Sheets as the database**. Tracks budgets, cash flow, and transactions with a Japandi-inspired design.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend:** React 19, TypeScript, Vite
+- **Auth:** Google OAuth 2.0 (`@react-oauth/google`)
+- **Database:** Google Sheets API v4
+- **State/Data:** TanStack Query
+- **Deployment:** Vercel
 
-## React Compiler
+## Setup
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Clone the repo and install dependencies:
+   ```bash
+   yarn
+   ```
 
-## Expanding the ESLint configuration
+2. Copy `.env.example` to `.env` and fill in:
+   ```
+   VITE_GOOGLE_CLIENT_ID=   # Google OAuth 2.0 Client ID (Web application type)
+   VITE_SHEET_ID=           # Google Sheet ID used as the database
+   ```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+3. Start the dev server:
+   ```bash
+   yarn dev
+   ```
+   App runs at http://localhost:5173
+
+## Commands
+
+```bash
+yarn dev            # Start dev server
+yarn build          # Production build (outputs to /dist)
+yarn lint           # ESLint checks
+yarn preview        # Preview production build locally
+yarn deploy         # Deploy preview to Vercel
+yarn deploy:prod    # Deploy to production on Vercel
+```
+
+## Deployment
+
+The app is deployed on Vercel. It's a static frontend-only PWA — no server-side config needed.
+
+### First-time setup
+
+1. Install the Vercel CLI:
+   ```bash
+   npm i -g vercel
+   ```
+
+2. Link the project:
+   ```bash
+   vercel link
+   ```
+
+3. Add environment variables to Vercel:
+   ```bash
+   vercel env add VITE_GOOGLE_CLIENT_ID
+   vercel env add VITE_SHEET_ID
+   ```
+   Set both for **Production**, **Preview**, and **Development** environments.
+
+4. In your Google Cloud Console, add the Vercel deployment URLs (e.g. `https://ekakeibo.vercel.app`) to the **Authorized JavaScript origins** for your OAuth 2.0 Client ID.
+
+### Deploy
+
+```bash
+yarn deploy         # Preview deployment
+yarn deploy:prod    # Production deployment
+```
+
+Or push to `main` — Vercel auto-deploys on every push via the Git integration.
+
+## Pages
+
+| Page           | Description                                                             |
+| -------------- | ----------------------------------------------------------------------- |
+| Budgets        | Budget progress bars, favorites, drag-and-drop reorder, category filter |
+| Cash Flow      | Month navigation, income/expense grouping, hide-zero toggle             |
+| Transactions   | Virtual scrolling for large lists, search/filter/sort                   |
+| Dashboard      | Placeholder — not yet implemented                                       |
+
+## Architecture
+
+Frontend-only PWA — no backend server. Google Sheets acts as the database, accessed directly from the browser via Bearer token.
+
+See `CLAUDE.md` for deeper architecture notes and `CODEBASE.md` for internals.
