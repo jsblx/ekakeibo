@@ -15,8 +15,8 @@ const PUSH_DURATION = 300
 
 function loadStoredToken(): string | null {
   try {
-    const token  = localStorage.getItem(TOKEN_KEY)
-    const expiry = Number(localStorage.getItem(EXPIRY_KEY) ?? 0)
+    const token  = sessionStorage.getItem(TOKEN_KEY)
+    const expiry = Number(sessionStorage.getItem(EXPIRY_KEY) ?? 0)
     if (token && Date.now() < expiry) return token
   } catch { /* ignore */ }
   return null
@@ -24,15 +24,15 @@ function loadStoredToken(): string | null {
 
 function saveToken(token: string, expiresIn: number) {
   try {
-    localStorage.setItem(TOKEN_KEY,  token)
-    localStorage.setItem(EXPIRY_KEY, String(Date.now() + (expiresIn - 60) * 1000))
+    sessionStorage.setItem(TOKEN_KEY,  token)
+    sessionStorage.setItem(EXPIRY_KEY, String(Date.now() + (expiresIn - 60) * 1000))
   } catch { /* ignore */ }
 }
 
 function clearToken() {
   try {
-    localStorage.removeItem(TOKEN_KEY)
-    localStorage.removeItem(EXPIRY_KEY)
+    sessionStorage.removeItem(TOKEN_KEY)
+    sessionStorage.removeItem(EXPIRY_KEY)
   } catch { /* ignore */ }
 }
 
@@ -61,7 +61,7 @@ function App() {
   // Auto-expire the token in-session when its TTL runs out
   useEffect(() => {
     if (!accessToken) return
-    const expiry = Number(localStorage.getItem(EXPIRY_KEY) ?? 0)
+    const expiry = Number(sessionStorage.getItem(EXPIRY_KEY) ?? 0)
     const remaining = expiry - Date.now()
     if (remaining <= 0) { setAccessToken(null); return }
     const timer = setTimeout(() => { clearToken(); setAccessToken(null) }, remaining)
