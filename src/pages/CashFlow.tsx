@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from 'react'
+import { parse, isValid } from 'date-fns'
 import { useSheetData } from '../hooks/useSheetData.js'
 import { SHEET_CONFIG } from '../config/sheets.js'
 import { parseNumber, formatCurrency } from '../utils/formatCurrency.js'
@@ -45,15 +46,24 @@ interface AggregatedRow {
 
 // ─── Parsing ──────────────────────────────────────────────────────────────────
 
+const DATE_FORMATS = [
+  'yyyy-MM-dd', 'yyyy/MM/dd',
+  'yyyy-MM',    'yyyy/MM',
+  'MM/yyyy',    'MM-yyyy',
+  'MMMM yyyy',  'MMM yyyy',
+  'yyyy MMMM',  'yyyy MMM',
+]
+const DATE_REF = new Date(2000, 0, 1)
+
 function normalizeYearMonth(raw: string): string {
   const s = raw.trim()
   if (!s) return ''
-  const isoMatch = s.match(/^(\d{4})[/-](\d{1,2})/)
-  if (isoMatch) return `${isoMatch[1]}-${isoMatch[2].padStart(2, '0')}`
-  const mdy = s.match(/^(\d{1,2})[/-](\d{4})/)
-  if (mdy) return `${mdy[2]}-${mdy[1].padStart(2, '0')}`
-  const d = new Date(s)
-  if (!isNaN(d.getTime())) return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+  for (const fmt of DATE_FORMATS) {
+    const d = parse(s, fmt, DATE_REF)
+    if (isValid(d)) {
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+    }
+  }
   return s
 }
 
