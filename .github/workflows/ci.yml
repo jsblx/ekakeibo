@@ -37,7 +37,7 @@ jobs:
     name: Await Approval
     needs: test
     runs-on: ubuntu-latest
-    environment: production   # ← pauses here until a reviewer approves in GitHub
+    environment: approval-gate   # ← pauses here until a reviewer approves in GitHub
     steps:
       - name: Approved
         run: echo "Deployment approved — proceeding."
@@ -46,6 +46,7 @@ jobs:
     name: Deploy to Production
     needs: approval
     runs-on: ubuntu-latest
+    environment: production   # ← provides access to production environment secrets
     steps:
       - uses: actions/checkout@v4
 
