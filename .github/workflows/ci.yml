@@ -33,18 +33,9 @@ jobs:
       # - name: Unit tests
       #   run: yarn test
 
-  approval:
-    name: Await Approval
-    needs: test
-    runs-on: ubuntu-latest
-    environment: approval-gate   # ← pauses here until a reviewer approves in GitHub
-    steps:
-      - name: Approved
-        run: echo "Deployment approved — proceeding."
-
   deploy:
     name: Deploy to Production
-    needs: approval
+    needs: test
     runs-on: ubuntu-latest
     environment: production   # ← provides access to production environment secrets
     steps:
