@@ -1,4 +1,4 @@
-name: CI
+name: deploy-to-production
 
 on:
   push:
@@ -33,11 +33,19 @@ jobs:
       # - name: Unit tests
       #   run: yarn test
 
-  deploy:
-    name: Deploy to Production
+  approval:
+    name: Await Approval
     needs: test
     runs-on: ubuntu-latest
-    environment: production   # ← requires manual approval in GitHub repo settings
+    environment: production   # ← pauses here until a reviewer approves in GitHub
+    steps:
+      - name: Approved
+        run: echo "Deployment approved — proceeding."
+
+  deploy:
+    name: Deploy to Production
+    needs: approval
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 

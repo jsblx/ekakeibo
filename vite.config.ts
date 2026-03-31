@@ -9,19 +9,19 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'Finance Dashboard',
-        short_name: 'Finance',
+        name: 'eKakeibo',
+        short_name: 'eKakeibo',
         theme_color: '#F7F4F0',
         background_color: '#F7F4F0',
         display: 'standalone',
         icons: [
           {
-            src: '/pwa-192x192.png',
+            src: '/eKakeibo-logo.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/pwa-512x512.png',
+            src: '/eKakeibo-logo.png',
             sizes: '512x512',
             type: 'image/png',
           },
