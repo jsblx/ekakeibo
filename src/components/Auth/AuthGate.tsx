@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import styles from './AuthGate.module.css'
 
@@ -17,17 +17,17 @@ function AuthGate({ onLogin }: AuthGateProps) {
 
   // Attempt a silent re-auth on mount — succeeds if the user has an active
   // Google session and has already granted the required scope.
-  const loginSilently = useGoogleLogin({
+  const googleLoginSilently = useGoogleLogin({
     onSuccess: (r) => onLogin(r.access_token, r.expires_in),
     onError: () => { /* silently show the login button */ },
     scope: SCOPE,
     prompt: 'none',
   })
+  const loginSilently = useCallback(() => googleLoginSilently(), [googleLoginSilently])
 
   useEffect(() => {
     loginSilently()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [loginSilently])
 
   return (
     <div className={styles.container}>

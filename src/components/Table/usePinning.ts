@@ -19,7 +19,10 @@ export function usePinning(storageKey: string | undefined): PinningState {
     if (!storageKey) return []
     try {
       const parsed = JSON.parse(localStorage.getItem(storageKey) || '[]')
-      return Array.isArray(parsed) ? (parsed as string[]) : []
+      if (Array.isArray(parsed) && parsed.every(item => typeof item === 'string')) {
+        return parsed as string[]
+      }
+      return []
     } catch { return [] }
   })
   const pinnedItems = useMemo(() => new Set(pinnedOrder), [pinnedOrder])
