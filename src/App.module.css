@@ -1,0 +1,86 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-6);
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Push transition overlay (mobile only) */
+.pushOverlay {
+  display: none;
+}
+
+@keyframes pushLeft {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+@keyframes pushRight {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+/* Desktop: left sidebar layout */
+@media (min-width: 769px) {
+  .shell {
+    flex-direction: row;
+  }
+
+  .content {
+    flex: 1;
+    padding: var(--space-8) var(--space-8) var(--space-4);
+  }
+
+  .pageWrapper {
+    animation: pageFadeIn 0.22s ease;
+  }
+}
+
+/* Mobile: bottom nav */
+@media (max-width: 768px) {
+  .content {
+    padding: var(--space-4) 0;
+    padding-bottom: calc(var(--space-12) + var(--space-4));
+    overflow-x: hidden;
+  }
+
+  .pushOverlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    overflow: hidden;
+    background: var(--color-bg);
+    padding: var(--space-4) 0;
+    padding-bottom: calc(var(--space-12) + var(--space-4));
+    box-sizing: border-box;
+  }
+
+  .pushSlider {
+    display: flex;
+    width: 200%;
+    height: 100%;
+  }
+
+  .pushSide {
+    width: 50%;
+    flex-shrink: 0;
+    min-width: 0;
+    overflow-y: auto;
+    height: 100%;
+  }
+
+  .pushForward  { animation: pushLeft  0.3s var(--ease-slide) forwards; }
+  .pushBackward { animation: pushRight 0.3s var(--ease-slide) forwards; }
+}

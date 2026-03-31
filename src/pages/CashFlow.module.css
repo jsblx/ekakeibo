@@ -1,0 +1,264 @@
+.page {
+  max-width: 740px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+/* Controls row: month nav (left) + hide-zero toggle (right) */
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.monthNav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.monthLabel {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  line-height: 1.2;
+  min-width: 80px;
+  text-align: center;
+}
+
+.monthNavBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  padding: 0;
+  transition: color 0.15s ease;
+}
+
+.monthNavBtn:hover:not(:disabled) { color: var(--color-text); }
+.monthNavBtn:disabled { opacity: 0.25; cursor: not-allowed; }
+
+.hideZeroBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.hideZeroBtn:hover { color: var(--color-text); border-color: var(--color-tan); }
+.hideZeroBtnActive { color: var(--color-sage); border-color: var(--color-sage); }
+
+/* ─── Toolbar ───────────────────────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 var(--space-3);
+  font-size: 14px;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.searchInput::placeholder { color: var(--color-text-muted); }
+.searchInput:focus { border-color: var(--color-tan); }
+
+/* ─── Row (mirrors BudgetRow, single-line) ──────────────────────── */
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  column-gap: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px dotted color-mix(in srgb, var(--color-border) 40%, transparent);
+  transition: background-color 0.1s ease;
+}
+
+.row:hover {
+  background-color: var(--color-bg);
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.gripHandle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: var(--color-border);
+  cursor: grab;
+}
+
+.gripHandle:active { cursor: grabbing; }
+
+.itemName {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+.amount {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.amountIncome   { color: var(--color-positive); }
+.amountExpense  { color: var(--color-danger); }
+
+.amountZero {
+  color: var(--color-text-muted);
+  opacity: 0.45;
+  font-weight: 400;
+}
+
+.pinBtnWrap {
+  display: contents;
+}
+
+.row:hover .pinBtnWrap > button {
+  opacity: 1;
+}
+
+/* ─── Table footer ──────────────────────────────────────────────── */
+
+.footerDivider { opacity: 0.4; }
+
+/* ─── Skeleton loading ──────────────────────────────────────────── */
+
+.skeleton {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--color-border);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skeletonRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2) 0;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    90deg,
+    var(--color-bg) 25%,
+    var(--color-nude) 50%,
+    var(--color-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonName { height: 14px; flex: 1; width: 60%; }
+.skeletonAmt  { height: 14px; width: 80px; flex-shrink: 0; }
+
+/* ─── Empty state ───────────────────────────────────────────────── */
+
+.empty {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-12) var(--space-8);
+  text-align: center;
+  font-size: 14px;
+  color: var(--color-text-muted);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.emptyHint {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* ─── Responsive ────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .page { gap: var(--space-4); height: calc(100dvh - 80px - var(--space-3)); }
+
+  .pageHeader { padding: 0 var(--space-4); }
+
+  .toolbar { padding: 0 var(--space-4); }
+
+  .monthNavBtn { display: none; }
+
+  .monthNav { touch-action: pan-y; user-select: none; }
+}

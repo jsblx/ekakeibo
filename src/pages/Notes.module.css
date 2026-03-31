@@ -1,0 +1,515 @@
+.page {
+  max-width: 740px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ─── Page header ─────────────────────────────────────────────────────────── */
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--color-text);
+  line-height: 1.2;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  padding: 0 var(--space-4);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-surface);
+  background-color: var(--color-sage);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.addButton:hover { background-color: var(--color-olive); }
+
+/* ─── Toolbar ─────────────────────────────────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 var(--space-3);
+  font-size: 14px;
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.searchInput::placeholder { color: var(--color-text-muted); }
+.searchInput:focus { border-color: var(--color-tan); }
+
+/* ─── Table row (rendered inside Table component's virtual scroll) ─────────── */
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 100px 1fr 110px 40px;
+  column-gap: var(--space-4);
+  padding: 0 var(--space-4);
+  align-items: center;
+  height: 100%;
+  box-sizing: border-box;
+  border-top: 1px dotted color-mix(in srgb, var(--color-border) 40%, transparent);
+  transition: background-color 0.1s ease, opacity 0.2s ease;
+}
+
+.tableRow:hover { background-color: var(--color-bg); }
+.rowDeleting { opacity: 0.4; pointer-events: none; }
+
+/* ─── Cell styles ─────────────────────────────────────────────────────────── */
+
+.cellDate {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.cellDesc {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.cellDescDate {
+  display: none;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.cellDescText {
+  font-size: 14px;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellSubtext {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cellAmt {
+  font-size: 13px;
+  font-weight: 500;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.amtNegative { color: var(--color-danger); }
+.amtPositive { color: var(--color-positive); }
+.amtZero     { color: var(--color-text-muted); opacity: 0.5; }
+
+.cellDelete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* ─── Delete button & inline confirmation ─────────────────────────────────── */
+
+.deleteBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  color: var(--color-danger);
+  background-color: color-mix(in srgb, var(--color-danger) 10%, transparent);
+}
+
+.deleteBtn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ─── Skeleton ────────────────────────────────────────────────────────────── */
+
+.skeleton {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.skeletonRow {
+  display: grid;
+  grid-template-columns: 100px 1fr 110px 40px;
+  align-items: center;
+  gap: var(--space-3);
+  height: 36px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  border-radius: var(--radius-full);
+  background: linear-gradient(
+    90deg,
+    var(--color-bg) 25%,
+    var(--color-nude) 50%,
+    var(--color-bg) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  height: 13px;
+}
+
+.skeletonDate   { width: 80%; }
+.skeletonDesc   { width: 70%; }
+.skeletonAmt    { width: 60%; justify-self: end; }
+.skeletonDelete { width: 20px; height: 20px; border-radius: var(--radius-sm); }
+
+/* ─── Add Modal ───────────────────────────────────────────────────────────── */
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.97) translateY(-6px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: var(--space-4);
+  animation: overlayFadeIn 0.2s ease;
+}
+
+.modal {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.2s ease;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6) var(--space-1);
+}
+
+.modalTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.modalClose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.modalClose:hover {
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: var(--space-6);
+}
+
+.fieldLabel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.fieldInput {
+  height: 36px;
+  padding: 0 var(--space-3);
+  font-size: 14px;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color 0.15s ease;
+  width: 100%;
+}
+
+.fieldInput:focus { border-color: var(--color-tan); }
+.fieldInput:disabled { opacity: 0.5; cursor: not-allowed; }
+.fieldInput[type="number"] { font-variant-numeric: tabular-nums; }
+
+.amountRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.amountRow .fieldInput {
+  flex: 1;
+  min-width: 0;
+}
+
+.signToggle {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: none;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease;
+  line-height: 1;
+}
+
+.signToggle:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.signNegative {
+  color: var(--color-danger);
+  border-color: color-mix(in srgb, var(--color-danger) 40%, transparent);
+  background-color: color-mix(in srgb, var(--color-danger) 8%, transparent);
+}
+
+.signPositive {
+  color: var(--color-positive);
+  border-color: color-mix(in srgb, var(--color-positive) 40%, transparent);
+  background-color: color-mix(in srgb, var(--color-positive) 8%, transparent);
+}
+
+.modalError {
+  font-size: 13px;
+  color: var(--color-danger);
+  padding: var(--space-2) var(--space-3);
+  background-color: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  border-radius: var(--radius-sm);
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  padding-top: var(--space-4);
+}
+
+.modalActions > button {
+  flex: 1;
+}
+
+.cancelBtn {
+  height: 36px;
+  padding: 0 var(--space-4);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.cancelBtn:hover { color: var(--color-text); border-color: var(--color-tan); }
+.cancelBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.submitBtn {
+  height: 36px;
+  padding: 0 var(--space-6);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-surface);
+  background-color: var(--color-sage);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.submitBtn:hover:not(:disabled) { background-color: var(--color-olive); }
+.submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.deleteModalBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-6) var(--space-6);
+}
+
+.deleteModalDesc {
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.deleteModalNote {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.deleteModalNoteDesc {
+  font-size: 14px;
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.deleteModalNoteMeta {
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.deleteConfirmBtn {
+  height: 36px;
+  padding: 0 var(--space-6);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-surface);
+  background-color: var(--color-danger);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.deleteConfirmBtn:hover:not(:disabled) { opacity: 0.85; }
+.deleteConfirmBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+
+.deleteModalActions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+  padding: 0 var(--space-6) var(--space-6);
+  padding-top: var(--space-4);
+}
+
+.deleteModalActions > button {
+  flex: 1;
+}
+
+/* ─── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .page { gap: var(--space-4); height: calc(100dvh - 80px - var(--space-3)); }
+  .pageHeader { padding: 0 var(--space-4); }
+  .toolbar { padding: 0 var(--space-4); }
+
+  /* Mobile grid: description | amount | delete (date hidden) */
+  .tableRow { grid-template-columns: 1fr 90px 40px; align-items: start; padding-top: 14px; padding-bottom: 14px; }
+
+  .cellDate { display: none; }
+
+  .cellDescDate { display: block; }
+  .cellDesc { gap: 0; }
+  .cellDescDate {
+    margin-bottom: 4px;
+    color: color-mix(in srgb, var(--color-text-muted) 55%, transparent);
+  }
+  .cellSubtext { margin-top: 4px; }
+  .cellAmt { padding-top: 19px; }
+  .cellDelete { align-items: flex-start; padding-top: 13px; }
+
+  .skeletonRow { grid-template-columns: 1fr 90px 40px; }
+  .skeletonDate { display: none; }
+
+  .modalOverlay {
+    align-items: flex-end;
+    justify-content: stretch;
+    padding: 0;
+  }
+
+  .modal {
+    max-width: 100%;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border-bottom: none;
+    animation: modalSlideUp 0.3s var(--ease-slide);
+  }
+
+  /* Prevent iOS viewport zoom on input focus (requires font-size >= 16px) */
+  .fieldInput {
+    font-size: 16px;
+  }
+}

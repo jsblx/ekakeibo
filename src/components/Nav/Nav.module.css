@@ -1,0 +1,229 @@
+.nav {
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  padding: var(--space-2) 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: none;
+}
+
+.brandName {
+  display: none;
+}
+
+.menuGroup {
+  width: 100%;
+}
+
+.items {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  gap: 0;
+  width: 100%;
+  justify-content: space-around;
+}
+
+.navItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  min-width: 64px;
+}
+
+.navItem:hover {
+  color: var(--color-text);
+}
+
+.navItem.active {
+  color: var(--color-olive);
+}
+
+.navItem.active .icon {
+  background-color: color-mix(in srgb, var(--color-sage) 20%, transparent);
+}
+
+.navItem.active .label {
+  font-weight: 700;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 16px;
+  margin: 0 -16px;
+  border-radius: var(--radius-full);
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.bottomGroup {
+  display: none;
+}
+
+.logoutBtn {
+  display: none;
+}
+
+/* Desktop: left sidebar */
+@media (min-width: 769px) {
+  .nav {
+    position: static;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 200px;
+    min-height: 100vh;
+    border-top: none;
+    border-right: 1px solid var(--color-border);
+    padding: var(--space-8) var(--space-4);
+    gap: var(--space-6);
+  }
+
+  .brand {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .brandLogo {
+    width: 120px;
+    height: auto;
+    display: block;
+  }
+
+  .menuGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    width: 100%;
+  }
+
+  .brandName {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--color-text);
+    letter-spacing: -0.3px;
+    padding: 0 var(--space-3);
+  }
+
+  .items {
+    flex-direction: column;
+    gap: var(--space-1);
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .navItem {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-3) var(--space-3);
+    border-radius: var(--radius-md);
+    min-width: unset;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .navItem.active {
+    background-color: color-mix(in srgb, var(--color-sage) 15%, transparent);
+    color: var(--color-olive);
+  }
+
+  .icon {
+    padding: 0;
+    margin: 0;
+  }
+
+  .navItem.active .icon {
+    background-color: transparent;
+  }
+
+  .navItem:hover:not(.active) {
+    background-color: var(--color-bg);
+  }
+
+  .label {
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+
+  .nav {
+    justify-content: flex-start; /* override space-around */
+  }
+
+  .bottomGroup {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    width: 100%;
+    margin-top: auto;
+  }
+
+  .sheetLink {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-3) var(--space-3);
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+
+  .sheetLink:hover {
+    color: var(--color-text);
+    background-color: var(--color-bg);
+  }
+
+  .logoutBtn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-3) var(--space-3);
+    background: none;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    color: var(--color-text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.15s ease, background-color 0.15s ease;
+    text-align: left;
+  }
+
+  .logoutBtn:hover {
+    color: var(--color-danger);
+    background-color: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  }
+}
