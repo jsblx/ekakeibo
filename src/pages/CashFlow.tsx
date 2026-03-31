@@ -49,13 +49,16 @@ interface AggregatedRow {
 const DATE_FORMATS = [
   'yyyy-MM-dd',   'yyyy/MM/dd',
   'yyyy-MM',      'yyyy/MM',
+  'M/d/yyyy',     'MM/dd/yyyy',
   'MM/yyyy',      'MM-yyyy',
+  'M/yyyy',       'M-yyyy',
   'MMMM d, yyyy', 'MMMM dd, yyyy',
   'MMM d, yyyy',  'MMM dd, yyyy',
   'd MMMM yyyy',  'dd MMMM yyyy',
   'd MMM yyyy',   'dd MMM yyyy',
   'MMMM yyyy',    'MMM yyyy',
   'yyyy MMMM',    'yyyy MMM',
+  'yyyy-MMMM',    'yyyy-MMM',
 ]
 const DATE_REF = new Date(2000, 0, 1)
 
