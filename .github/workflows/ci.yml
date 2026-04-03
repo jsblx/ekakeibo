@@ -36,6 +36,8 @@ jobs:
     name: E2E Tests
     needs: test
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.59.1-jammy
     steps:
       - uses: actions/checkout@v4
 
@@ -50,14 +52,12 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
-      - name: Install Playwright browsers
-        run: yarn playwright install chromium --with-deps
-
       - name: Run E2E tests
         run: yarn test:e2e
         env:
           VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
           VITE_SHEET_ID: ${{ secrets.VITE_SHEET_ID }}
+          HOME: /root
 
       - name: Upload report on failure
         if: failure()

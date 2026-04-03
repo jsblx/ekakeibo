@@ -13,7 +13,9 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:e2e:update": "playwright test --update-snapshots"
+    "test:e2e:update": "playwright test --update-snapshots",
+    "test:e2e:docker": "docker run --rm -v $(pwd):/work -w /work -e VITE_GOOGLE_CLIENT_ID=test -e VITE_SHEET_ID=test mcr.microsoft.com/playwright:v1.59.1-jammy yarn test:e2e",
+    "test:e2e:update:docker": "docker run --rm -v $(pwd):/work -w /work -e VITE_GOOGLE_CLIENT_ID=test -e VITE_SHEET_ID=test mcr.microsoft.com/playwright:v1.59.1-jammy yarn test:e2e:update"
   },
   "dependencies": {
     "@react-oauth/google": "^0.13.4",
