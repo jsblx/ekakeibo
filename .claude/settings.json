@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn *)",
+      "Bash(git *)",
+      "Edit(./**)",
+      "Read(./**)"
+    ],
+    "deny": [
+      "Read(./**.env)"
+    ]
+  }
+}
