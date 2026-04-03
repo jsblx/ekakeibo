@@ -84,3 +84,96 @@
   .pushForward  { animation: pushLeft  0.3s var(--ease-slide) forwards; }
   .pushBackward { animation: pushRight 0.3s var(--ease-slide) forwards; }
 }
+
+/* ─── Logout Confirmation Modal ───────────────────────────────────────────── */
+
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; transform: scale(0.97) translateY(-6px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background-color: color-mix(in srgb, var(--color-text) 40%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: var(--space-4);
+  animation: overlayFadeIn 0.2s ease;
+}
+
+.modal {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.2s ease;
+}
+
+.modalHeader {
+  padding: var(--space-4) var(--space-6) var(--space-2);
+}
+
+.modalTitle {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.modalBody {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  padding: 0 var(--space-6) var(--space-4);
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6) var(--space-6);
+}
+
+.modalActions > button {
+  flex: 1;
+}
+
+.cancelBtn {
+  height: 36px;
+  padding: 0 var(--space-4);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.cancelBtn:hover { color: var(--color-text); border-color: var(--color-tan); }
+
+.confirmBtn {
+  height: 36px;
+  padding: 0 var(--space-4);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-surface);
+  background-color: var(--color-danger);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.confirmBtn:hover { opacity: 0.85; }

@@ -34,7 +34,7 @@ function formatDateDisplay(d: Date): string {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-function parseNotes(raw: string[][]): NoteRow[] {
+function parseNotes(raw: string[][], codeToLabel: Map<string, string>): NoteRow[] {
   if (!raw || raw.length < 2) return []
   const headers = raw[0].map((h) => h.trim().toLowerCase())
   const col = (name: string) => headers.indexOf(name.toLowerCase())
@@ -50,13 +50,14 @@ function parseNotes(raw: string[][]): NoteRow[] {
     if (!row || !row[descIdx]) continue
     const rawDate = (row[dateIdx] || '').trim()
     const d = parseDate(rawDate)
+    const rawCat = (row[catIdx] || '').trim()
     rows.push({
       rowIndex: i + 1,
       date: rawDate,
       dateDisplay: d ? formatDateDisplay(d) : rawDate,
       description: (row[descIdx] || '').trim(),
       amount: parseNumber(row[amtIdx]),
-      category: (row[catIdx] || '').trim(),
+      category: codeToLabel.get(rawCat) ?? rawCat,
     })
   }
 
@@ -72,23 +73,32 @@ function parseNotes(raw: string[][]): NoteRow[] {
   return rows
 }
 
-function parseCategoryOptions(rawCategories: string[][]): string[] {
-  if (!rawCategories || rawCategories.length < 2) return []
-  const headers = rawCategories[0].map((h) => h.trim().toLowerCase())
-  const catIdx = headers.indexOf('category')
-  if (catIdx === -1) return []
-  const seen = new Set<string>()
-  for (let i = 1; i < rawCategories.length; i++) {
-    const val = rawCategories[i]?.[catIdx]?.trim()
-    if (val) seen.add(val)
+interface CategoryOption {
+  label: string
+  code: string
+}
+
+function parseBudgetCategories(rawBudgets: string[][]): CategoryOption[] {
+  if (!rawBudgets || rawBudgets.length < 2) return []
+  const headers = rawBudgets[0].map((h) => h.trim().toLowerCase())
+  const codeIdx = headers.indexOf('code')
+  if (codeIdx === -1) return []
+  const seen = new Map<string, string>() // code → label
+  for (let i = 1; i < rawBudgets.length; i++) {
+    const code = (rawBudgets[i]?.[codeIdx] || '').trim()
+    if (!code) continue
+    const label = code.split(':').pop()!.trim()
+    if (!seen.has(code)) seen.set(code, label)
   }
-  return [...seen].sort()
+  return [...seen.entries()]
+    .map(([code, label]) => ({ code, label }))
+    .sort((a, b) => a.label.localeCompare(b.label))
 }
 
 // ─── Add Modal ────────────────────────────────────────────────────────────────
 
 interface AddModalProps {
-  categories: string[]
+  categories: CategoryOption[]
   onClose: () => void
   onSubmit: (values: string[]) => void
   isSubmitting: boolean
@@ -101,7 +111,7 @@ function AddModal({ categories, onClose, onSubmit, isSubmitting, submitError }: 
   const [description, setDescription] = useState('')
   const [amount, setAmount] = useState('')
   const [isNegative, setIsNegative] = useState(true)
-  const [category, setCategory] = useState(categories[0] ?? '')
+  const [category, setCategory] = useState(categories[0]?.code ?? '')
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -144,7 +154,7 @@ function AddModal({ categories, onClose, onSubmit, isSubmitting, submitError }: 
           <label className={styles.fieldLabel}>
             Category
             <select className={styles.fieldInput} value={category} onChange={(e) => setCategory(e.target.value)} required disabled={isSubmitting}>
-              {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+              {categories.map(({ code, label }) => <option key={code} value={code}>{label}</option>)}
             </select>
           </label>
           {submitError && <p className={styles.modalError}>{submitError}</p>}
@@ -245,17 +255,18 @@ function Notes({ accessToken }: NotesProps) {
   const [deleteError, setDeleteError] = useState<string | null>(null)
   const [isMobile, setIsMobile] = useState(() => window.innerWidth <= MOBILE_BREAKPOINT)
 
-  const notesRange      = `${SHEET_CONFIG.tabs.notes}!A1:D5000`
-  const categoriesRange = `${SHEET_CONFIG.tabs.categories}!A1:D1000`
+  const notesRange   = `${SHEET_CONFIG.tabs.notes}!A1:D5000`
+  const budgetsRange = `${SHEET_CONFIG.tabs.budgets}!A1:Z1000`
 
   const { data: rawNotes, isLoading, isError, error, refetch } = useSheetData(accessToken, notesRange)
-  const { data: rawCategories } = useSheetData(accessToken, categoriesRange)
+  const { data: rawBudgets } = useSheetData(accessToken, budgetsRange)
 
   const appendMutation = useAppendRow(accessToken, notesRange)
   const deleteMutation = useDeleteRow(accessToken, SHEET_CONFIG.tabs.notes, notesRange)
 
-  const notes = useMemo(() => parseNotes(rawNotes ?? []), [rawNotes])
-  const categories = useMemo(() => parseCategoryOptions(rawCategories ?? []), [rawCategories])
+  const categoryOptions = useMemo(() => parseBudgetCategories(rawBudgets ?? []), [rawBudgets])
+  const codeToLabel = useMemo(() => new Map(categoryOptions.map(({ code, label }) => [code, label])), [categoryOptions])
+  const notes = useMemo(() => parseNotes(rawNotes ?? [], codeToLabel), [rawNotes, codeToLabel])
 
   const filteredNotes = useMemo(() => {
     const q = search.trim().toLowerCase()
@@ -349,7 +360,7 @@ function Notes({ accessToken }: NotesProps) {
 
       {showAddModal && (
         <AddModal
-          categories={categories}
+          categories={categoryOptions}
           onClose={() => { if (!appendMutation.isPending) setShowAddModal(false) }}
           onSubmit={handleAdd}
           isSubmitting={appendMutation.isPending}

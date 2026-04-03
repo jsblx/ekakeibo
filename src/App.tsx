@@ -36,8 +36,26 @@ function clearToken() {
   } catch { /* ignore */ }
 }
 
+function LogoutModal({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
+  return (
+    <div className={styles.modalOverlay} onClick={onCancel}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
+          <h2 className={styles.modalTitle}>Log out</h2>
+        </div>
+        <p className={styles.modalBody}>Are you sure you want to log out?</p>
+        <div className={styles.modalActions}>
+          <button className={styles.cancelBtn} onClick={onCancel} type="button">Cancel</button>
+          <button className={styles.confirmBtn} onClick={onConfirm} type="button">Log out</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const [accessToken, setAccessToken] = useState<string | null>(loadStoredToken)
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [activePage, setActivePage] = useState<PageId>(() => {
     const param = new URLSearchParams(window.location.search).get('page') as PageId
     return PAGE_ORDER.includes(param) ? param : 'budgets'
@@ -91,8 +109,13 @@ function App() {
   }
 
   function handleLogout() {
+    setShowLogoutConfirm(true)
+  }
+
+  function handleLogoutConfirm() {
     clearToken()
     setAccessToken(null)
+    setShowLogoutConfirm(false)
   }
 
   if (!accessToken) {
@@ -115,6 +138,9 @@ function App() {
   return (
     <div className={styles.shell}>
       <Nav activePage={activePage} onNavigate={handleNavigate} onLogout={handleLogout} />
+      {showLogoutConfirm && (
+        <LogoutModal onConfirm={handleLogoutConfirm} onCancel={() => setShowLogoutConfirm(false)} />
+      )}
       <main className={styles.content}>
         <div key={activePage} className={styles.pageWrapper}>
           {renderPageContent(activePage)}
