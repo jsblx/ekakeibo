@@ -104,11 +104,7 @@
 
 @media (max-width: 768px) {
   .rowContent {
-    grid-template-columns: 1fr 140px;
-  }
-
-  .typeBadge {
-    display: none;
+    grid-template-columns: 1fr auto 140px;
   }
 }
 
