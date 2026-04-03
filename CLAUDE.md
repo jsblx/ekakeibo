@@ -11,7 +11,7 @@ yarn lint          # ESLint checks
 yarn preview       # Preview production build locally
 ```
 
-No test framework is currently configured.
+Use only yarn, and NOT npm
 
 ## Environment Setup
 
@@ -19,6 +19,12 @@ Copy `.env.example` to `.env` and fill in:
 
 - `VITE_GOOGLE_CLIENT_ID` — Google OAuth 2.0 Client ID (Web application type)
 - `VITE_SHEET_ID` — Google Sheet ID used as the database
+
+## Change management
+
+1. Use conventional commits when creating commits
+2. Always add a summary of changes as part of the PR description. If there are any breaking changes, make sure to highlight them
+3. No need to include a test plan in the description, unless the tests are part of the changes (unit, integration, e2e tests)
 
 ## Architecture
 
@@ -78,6 +84,11 @@ Navigation uses URL query params (`?page=budgets`).
 - `PLAN.md` — Original design specs and color tokens
 
 ## AI Strategy
+
+### Use subagents when executing tasks
+
+- Run tasks in parallel whenever possible. Use the appropriate expert subagents for the task.
+- In workflows that include QA testing, allow the QA to create a test plan which becomes the basis for implementation, and which the QA subagent will use once implementation is complete
 
 ### Reduce context rot through subagents
 
